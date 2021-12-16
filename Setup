@@ -1,0 +1,42 @@
+Installing dependencies:
+sudo apt-get install git-core cmake freeglut3-dev pkg-config build-essential libxmu-dev libxi-dev libusb-1.0-0-dev
+
+Clone the repository to your system:
+git clone git://github.com/OpenKinect/libfreenect.git
+
+Install libfreenect:
+cd libfreenect
+mkdir build
+cd build
+cmake -L ..
+make
+sudo make install
+sudo ldconfig /usr/local/lib64/
+
+If you want to run as non-sudo:
+sudo adduser $USER video
+sudo adduser $USER plugdev
+
+update audios.bin and copy to usr:
+cd libfrenect/src
+sudo python3 fwfetcher.py
+cp audio /usr/local/share/libfreenect #might be shared instead of share on your system
+
+Testing the setup:
+#These two commands must be run every time we plug in the kinect
+freenect-micview
+freenect-camtest
+
+Integration with python and opencv
+install dependencies:
+sudo apt-get install cython
+sudo apt-get install python-dev
+sudo apt-get install python-numpy
+
+change directory:
+cd <pathtofreenect>/libfreenect/wrappers/python
+
+Run command:
+sudo python3 setup.py install
+
+
