@@ -1,0 +1,9 @@
+marcação já teve resultados aceitáveis mas é volátil (depende muito da marcação de pontos feita pelo o utilizador)
+
+depth to pcd está feito. Testar rgbd to pcd, possivelmente sera necessario alinhamento. 
+
+Icp está feito, functional. Makes sense mas a deteção inicial tem falhas
+
+
+ Não trabalhamos com os originais porque o conjunto de correspondências toma valores como 306686, o que demora muito tempo a processar. Voxel downsample com vizinhança de 0.001 já diminui as
+ pcds de 307200 pontos para 58403
