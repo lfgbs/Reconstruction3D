@@ -5,14 +5,10 @@ import numpy as np
 def draw_registration_result(source, target, transformation):
     source_temp = copy.deepcopy(source)
     target_temp = copy.deepcopy(target)
-    source_temp.paint_uniform_color([1, 0.706, 0])
-    target_temp.paint_uniform_color([0, 0.651, 0.929])
+    #source_temp.paint_uniform_color([1, 0.706, 0])
+    #target_temp.paint_uniform_color([0, 0.651, 0.929])
     source_temp.transform(transformation)
-    o3d.visualization.draw_geometries([source_temp, target_temp],
-                                      zoom=0.4459,
-                                      front=[0.9288, -0.2951, -0.2242],
-                                      lookat=[1.6784, 2.0612, 1.4451],
-                                      up=[-0.3402, -0.9189, -0.1996])
+    o3d.visualization.draw_geometries([source_temp, target_temp])
 
 def pick_points(pcd):
     print("")
@@ -33,12 +29,13 @@ def pick_points(pcd):
 def main():
      #loading and showing pcd
     print("Load a ply point cloud, print it, and render it")
-    pcd1 = o3d.io.read_point_cloud("clouds/room2.pcd")
-    pcd2 = o3d.io.read_point_cloud("clouds/room3.pcd")
+    pcd1 = o3d.io.read_point_cloud("clouds/roomrgbd3.pcd")
+    pcd2 = o3d.io.read_point_cloud("clouds/roomrgbd2.pcd")
 
-    downpcd1 = pcd1.voxel_down_sample(1)
-    downpcd2 = pcd2.voxel_down_sample(1)
+    downpcd1 = pcd1.voxel_down_sample(0.001)
+    downpcd2 = pcd2.voxel_down_sample(0.001)  
 
+    #as nuvens nas posições originais
     draw_registration_result(downpcd1, downpcd2, np.identity(4))
 
     # pick points from two point clouds and builds correspondences
@@ -56,14 +53,22 @@ def main():
     trans_init = p2p.compute_transformation(downpcd1, downpcd2,
                                             o3d.utility.Vector2iVector(corr))
 
+    draw_registration_result(downpcd1, downpcd2, trans_init)
+
     # point-to-point ICP for refinement
     print("Perform point-to-point ICP refinement")
-    threshold = 1  # 3cm distance threshold
+    threshold = 0.0001 
     reg_p2p = o3d.pipelines.registration.registration_icp(
         downpcd1, downpcd2, threshold, trans_init,
-        o3d.pipelines.registration.TransformationEstimationPointToPoint())
+        o3d.pipelines.registration.TransformationEstimationPointToPoint(),
+        o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=2000))
+
     draw_registration_result(downpcd1, downpcd2, reg_p2p.transformation)
-    print("")
+    
+    print("Final alignment alignment")
+    evaluation = o3d.pipelines.registration.evaluate_registration(
+    downpcd1, downpcd2, threshold, reg_p2p.transformation)
+    print(evaluation)
 
 if __name__ == "__main__":
     main()

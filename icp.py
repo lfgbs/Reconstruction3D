@@ -23,7 +23,6 @@ def main():
     downpcd1 = pcd1.voxel_down_sample(0.001)
     downpcd2 = pcd2.voxel_down_sample(0.001)    
 
-    trans_init=eye(4)
     trans_init = np.asarray([[math.cos(-math.pi/12),0.0, math.sin(-math.pi/12),0.0], [0.0,1.0, 0.0, 0.0], [-math.sin(-math.pi/12),  0.0, math.cos(-math.pi/12), 0.0], [0.0, 0.0, 0.0, 1.0] ])
 
     threshold=0.01
@@ -46,11 +45,6 @@ def main():
 
     #desenhamos com a transformação calculada com os downsampled
     draw_registration_result(downpcd1, downpcd2, reg_p2p.transformation)
-
-    print("Final alignment alignment(originals)")
-    evaluation = o3d.pipelines.registration.evaluate_registration(
-    downpcd1, downpcd2, threshold, trans_init)
-    print(evaluation)
     
 
 if __name__ == "__main__":
