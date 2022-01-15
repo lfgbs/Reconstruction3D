@@ -18,7 +18,6 @@ def get_depth():
 def main():
      
     #parâmetros intrínsecos da câmara, num formato que será utilizado para a conversão depth para pcd 
-    #intrinsics = o3d.camera.PinholeCameraIntrinsic(680, 420, 601.1693115234375, 600.85931396484375, 637.83624267578125, 363.8018798828125)
     intrinsics = o3d.camera.PinholeCameraIntrinsic(680, 420, 594.21, 591.04, 339.5, 242.7)
 
 
@@ -40,20 +39,29 @@ def main():
         if key == ord("q"):
             break
         if key == ord("p"):
+            
+            """ cv2.imwrite( "send/frame1.png" , frame)
+            cv2.imwrite(  "send/depth1.png", depth)
+
+            exit()
+
+            frame = cv2.imread("send/frame.png")
+            depth=cv2.imread("send/depth.png") """
+
             rgb_img=o3d.geometry.Image(frame)
             depth_img=np.float32(depth)
             depth_map=o3d.geometry.Image(depth_img)
             rgbd=o3d.geometry.RGBDImage.create_from_color_and_depth(rgb_img, depth_map, convert_rgb_to_intensity=False)
-            pcd_depth=o3d.geometry.PointCloud.create_from_depth_image(depth_map, intrinsics)
+            #pcd_depth=o3d.geometry.PointCloud.create_from_depth_image(depth_map, intrinsics)
             pcd_rgbd=o3d.geometry.PointCloud.create_from_rgbd_image(rgbd, intrinsics)
 
             date_img = datetime.now().strftime("%H:%M:%S_%Y")
             
-            pcd_depth.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]]) #flip it upside down
+            #pcd_depth.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]]) #flip it upside down
             pcd_rgbd.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]]) #flip it upside down
             #o3d.io.write_point_cloud("clouds/roomdepth"+date_img+".pcd", pcd_depth)
-            #o3d.io.write_point_cloud("clouds/roomrgbd"+date_img+".pcd", pcd_rgbd)
-            o3d.visualization.draw_geometries([pcd_rgbd])
+            o3d.io.write_point_cloud("clouds/roomrgbd"+date_img+".pcd", pcd_rgbd)
+            #o3d.visualization.draw_geometries([pcd_rgbd])
 
     cv2.destroyAllWindows()
  

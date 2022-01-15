@@ -29,8 +29,8 @@ def pick_points(pcd):
 def main():
      #loading and showing pcd
     print("Load a ply point cloud, print it, and render it")
-    pcd1 = o3d.io.read_point_cloud("clouds/roomrgbd3.pcd")
-    pcd2 = o3d.io.read_point_cloud("clouds/roomrgbd2.pcd")
+    pcd1 = o3d.io.read_point_cloud("clouds/roomrgbd4.pcd")
+    pcd2 = o3d.io.read_point_cloud("clouds/roomrgbd3.pcd")
 
     downpcd1 = pcd1.voxel_down_sample(0.001)
     downpcd2 = pcd2.voxel_down_sample(0.001)  

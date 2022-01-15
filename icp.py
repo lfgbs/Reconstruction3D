@@ -18,7 +18,11 @@ def main():
     #loading and showing pcd
     print("Load a ply point cloud, print it, and render it")
     pcd2 = o3d.io.read_point_cloud("clouds/roomrgbd2.pcd")
-    pcd1 = o3d.io.read_point_cloud("clouds/roomrgbd3.pcd")
+    pcd1 = o3d.io.read_point_cloud("clouds/roomrgbd3.pcd") 
+
+    """ pcd2 = o3d.io.read_point_cloud("clouds/roomdepth2.pcd")
+    pcd1 = o3d.io.read_point_cloud("clouds/roomdepth2.pcd") """
+
 
     downpcd1 = pcd1.voxel_down_sample(0.001)
     downpcd2 = pcd2.voxel_down_sample(0.001)    
@@ -45,7 +49,19 @@ def main():
 
     #desenhamos com a transformação calculada com os downsampled
     draw_registration_result(downpcd1, downpcd2, reg_p2p.transformation)
-    
 
+    """ downpcd1.transform(reg_p2p.transformation)
+
+    combined_pcd=o3d.geometry.PointCloud()
+    combined_pcd+=downpcd1
+    combined_pcd+=downpcd2
+
+    o3d.io.write_point_cloud("clouds/combined.pcd", combined_pcd)
+
+    cloud_result=o3d.io.read_point_cloud("clouds/combined.pcd")
+
+    print("SHOWING COMBINATION")
+    o3d.visualization.draw_geometries([cloud_result]) """
+    
 if __name__ == "__main__":
     main()
