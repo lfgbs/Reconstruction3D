@@ -87,7 +87,7 @@ def main():
 
     o3d.io.write_point_cloud(args.clouds_path+"/combined_clouds.pcd" ,combined_clouds)
     
-   """  checking=o3d.io.read_point_cloud(args.clouds_path+"/combined_clouds.pcd")
+    """  checking=o3d.io.read_point_cloud(args.clouds_path+"/combined_clouds.pcd")
 
     print("FINAL CLOUD!!!!!!!!!!!1")
     o3d.visualization.draw_geometries([checking]) """
