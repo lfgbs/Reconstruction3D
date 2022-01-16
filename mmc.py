@@ -48,7 +48,8 @@ def main():
     #carregar as nuvens usando o path
     for pcd_path in pcd_paths:
         pcd=o3d.io.read_point_cloud(pcd_path)
-        pcds.append(pcd)
+        down_sample=pcd.voxel_down_sample(0.001)
+        pcds.append(down_sample)
 
     for i in range(len(pcd_paths)):
         # pick points from two point clouds and builds correspondences
@@ -85,9 +86,9 @@ def main():
             
         combined_clouds+=cloud
 
-    o3d.io.write_point_cloud(args.clouds_path+"/combined_clouds.pcd" ,combined_clouds)
+    o3d.io.write_point_cloud(args.clouds_path+"/result/combined_clouds.pcd" ,combined_clouds)
     
-    """  checking=o3d.io.read_point_cloud(args.clouds_path+"/combined_clouds.pcd")
+    """checking=o3d.io.read_point_cloud(args.clouds_path+"/result/combined_clouds.pcd")
 
     print("FINAL CLOUD!!!!!!!!!!!1")
     o3d.visualization.draw_geometries([checking]) """
