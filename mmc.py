@@ -1,7 +1,6 @@
 import open3d as o3d
 import copy
 import numpy as np
-import os
 import argparse
 import glob
 
@@ -74,26 +73,25 @@ def main():
         for i in range(index):
             cloud.transform(transformations[index-i])
 
+        if index!=0:
+            # point-to-point ICP for refinement
+            print("Perform point-to-point ICP refinement")
+            threshold = 0.0001 
+            reg_p2p = o3d.pipelines.registration.registration_icp(
+                pcds[i], pcds[i-1], threshold, trans_init,
+                o3d.pipelines.registration.TransformationEstimationPointToPoint(),
+                o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=2000))
+
+            
         combined_clouds+=cloud
 
-    o3d.visualization.draw_geometries([combined_clouds])
-
-    exit()
-
-    # point-to-point ICP for refinement
-    print("Perform point-to-point ICP refinement")
-    threshold = 0.0001 
-    reg_p2p = o3d.pipelines.registration.registration_icp(
-        downpcd1, downpcd2, threshold, trans_init,
-        o3d.pipelines.registration.TransformationEstimationPointToPoint(),
-        o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=2000))
-
-    draw_registration_result(downpcd1, downpcd2, reg_p2p.transformation)
+    o3d.io.write_point_cloud(args.clouds_path+"/combined_clouds.pcd" ,combined_clouds)
     
-    print("Final alignment alignment")
-    evaluation = o3d.pipelines.registration.evaluate_registration(
-    downpcd1, downpcd2, threshold, reg_p2p.transformation)
-    print(evaluation)
+   """  checking=o3d.io.read_point_cloud(args.clouds_path+"/combined_clouds.pcd")
+
+    print("FINAL CLOUD!!!!!!!!!!!1")
+    o3d.visualization.draw_geometries([checking]) """
+    
 
 if __name__ == "__main__":
     main()

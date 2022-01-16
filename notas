@@ -13,7 +13,13 @@ Icp está feito, functional. Makes sense mas a deteção inicial tem falhas
  
 
 ###############################################################################
-Junção de pcds numa só tem de ser feito à mão
+Junção de pcds numa só tem de ser feito à mão. Já está feito
+
+
+
+##########################################################################
+Global registration
+Doesnt rely on user for inital alignment
 
  
 

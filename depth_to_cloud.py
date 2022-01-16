@@ -19,6 +19,7 @@ def main():
      
     #parâmetros intrínsecos da câmara, num formato que será utilizado para a conversão depth para pcd 
     intrinsics = o3d.camera.PinholeCameraIntrinsic(680, 420, 594.21, 591.04, 339.5, 242.7)
+    count=0
 
 
     while True:
@@ -40,13 +41,9 @@ def main():
             break
         if key == ord("p"):
             
-            """ cv2.imwrite( "send/frame1.png" , frame)
-            cv2.imwrite(  "send/depth1.png", depth)
+            cv2.imwrite( "send/frame"+str(count)+".png" , frame)
+            cv2.imwrite(  "send/depth"+str(count)+".png", depth)
 
-            exit()
-
-            frame = cv2.imread("send/frame.png")
-            depth=cv2.imread("send/depth.png") """
 
             rgb_img=o3d.geometry.Image(frame)
             depth_img=np.float32(depth)
@@ -60,8 +57,11 @@ def main():
             #pcd_depth.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]]) #flip it upside down
             pcd_rgbd.transform([[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]]) #flip it upside down
             #o3d.io.write_point_cloud("clouds/roomdepth"+date_img+".pcd", pcd_depth)
-            o3d.io.write_point_cloud("clouds/roomrgbd"+date_img+".pcd", pcd_rgbd)
+            #o3d.io.write_point_cloud("clouds/roomrgbd"+date_img+".pcd", pcd_rgbd)
+            o3d.io.write_point_cloud("clouds/resi/roomrgbd"+str(count)+".pcd", pcd_rgbd)
             #o3d.visualization.draw_geometries([pcd_rgbd])
+
+            count+=1
 
     cv2.destroyAllWindows()
  
