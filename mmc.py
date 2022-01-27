@@ -36,6 +36,7 @@ def main():
     parser.add_argument('--clouds_path', type=str, required=True, help='Path to folder that contains the scenes pointclouds')
     args = parser.parse_args()
 
+    
     pcds=[] #holds the clouds
     transformations=[] #holds the respective transformations
     combined_clouds=o3d.geometry.PointCloud() #amalgamation de todas as nuvens
@@ -48,8 +49,10 @@ def main():
     #carregar as nuvens usando o path
     for pcd_path in pcd_paths:
         pcd=o3d.io.read_point_cloud(pcd_path)
-        down_sample=pcd.voxel_down_sample(0.001)
+        down_sample=pcd.voxel_down_sample(0.001) #passa de 307000 para 50000 pontos
         pcds.append(down_sample)
+
+        print(down_sample)
 
     for i in range(len(pcd_paths)):
         # pick points from two point clouds and builds correspondences
@@ -87,8 +90,10 @@ def main():
         combined_clouds+=cloud
 
     o3d.io.write_point_cloud(args.clouds_path+"/result/combined_clouds.pcd" ,combined_clouds)
+
+    print("Cloud saved")
     
-    """checking=o3d.io.read_point_cloud(args.clouds_path+"/result/combined_clouds.pcd")
+    """ checking=o3d.io.read_point_cloud(args.clouds_path+"/result/combined_clouds.pcd")
 
     print("FINAL CLOUD!!!!!!!!!!!1")
     o3d.visualization.draw_geometries([checking]) """

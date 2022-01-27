@@ -14,6 +14,7 @@ Icp está feito, functional. Makes sense mas a deteção inicial tem falhas
 
 ###############################################################################
 Junção de pcds numa só tem de ser feito à mão. Já está feito
+The result is usually not tight. Local refinement, point-to-plane???? Nem sei se tenho tempo 
 
 
 
@@ -21,5 +22,29 @@ Junção de pcds numa só tem de ser feito à mão. Já está feito
 Global registration
 Doesnt rely on user for inital alignment
 
+Há um método (CorrespondenceCheckerBasedOnDistance) que permite ver se a operação final deixou as nuvens dentro de uma certa distância. Isto vai ser ótimo para excluir nuvens 
+que por movimentos muito bruscos ou mau alinhamento, sejam outliers.
+
+Only matches that pass the pruning step are used to compute a transformation, which is validated on the entire point cloud. The core function is registration_ransac_based_on_feature_matching. The most important hyperparameter of this function is RANSACConvergenceCriteria. It defines the maximum number of RANSAC iterations and the confidence probability. The larger these two numbers are, the more accurate the result is, but also the more time the algorithm takes.
  
 
+Já obtive os primeiros resultados mas está um bocado mamado dos cornos. Ainda só estou a tentar com duas nuvens
+Alterar o downsampling melhorou pa caralho
+
+voxel   | correspondece_set_size    |   Result
+  0.01  |    63                     |   good background, bad foreground
+  0.005 |          108              |   good foreground, bad background 
+  0.05  |            21             |   doesnt work, clouds alignment doesnt result in them being close enough
+  0.001 |          782              |   doesnt work, clouds alignment doesnt result in them being close enough
+  0.0075|         70                |   good background, passable foreground
+  0.006 |         60                |   good background, acceptable foreground
+  0.0055|         66                |   good foreground, broken background
+
+Is there a better way of determining the voxel_size than trial and error???
+
+
+O algoritmo tem sido extremamente rápido com  as clouds utilizadas. Se o CorrespondenceCheckerBasedOnDistance não for respeitado, as nuvens ficam na posição inicial de momento
+
+
+GLOBAL REG 
+  FPFH (fast point feature histogram) - cointrói-se o histograma de 33 dimensões para cada um dos pontos e é isto que se utiliza para comparar pontos e fazer correspondências no ransac. o objetivo é usar nas comparações parâmetros que não dependam do ponto de vista.
